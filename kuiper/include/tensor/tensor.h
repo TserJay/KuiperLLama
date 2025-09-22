@@ -115,7 +115,7 @@ const T* Tensor::ptr() const {
   if (!buffer_) {
     return nullptr;
   }
-  return const_cast<const T*>(reinterpret_cast<T*>(buffer_->ptr()));
+  return const_cast<const T*>(reinterpret_cast<T*>(buffer_->ptr())); //
 }
 
 template <typename T>
