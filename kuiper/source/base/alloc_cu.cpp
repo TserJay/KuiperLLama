@@ -43,7 +43,7 @@ void* CUDADeviceAllocator::allocate(size_t byte_size) const {
   for (int i = 0; i < cuda_buffers.size(); i++) {
     if (cuda_buffers[i].byte_size >= byte_size && !cuda_buffers[i].busy) {
       cuda_buffers[i].busy = true;
-      no_busy_cnt_[id] -= cuda_buffers[i].byte_size;
+      no_busy_cnt_[id] -= cuda_buffers[i].byte_size; // 申请：no_busy 空闲的显存块 -1
       return cuda_buffers[i].data;
     }
   }
@@ -86,7 +86,7 @@ void CUDADeviceAllocator::release(void* ptr) const {
       }
       cuda_buffers.clear();
       it.second = temp;
-      no_busy_cnt_[it.first] = 0;
+      no_busy_cnt_[it.first] = 0;  // 清理完毕后置为0
     }
   }
 

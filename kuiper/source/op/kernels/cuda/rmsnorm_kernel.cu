@@ -76,7 +76,7 @@ static __global__ void row_rmsnorm_f32(float* in, float* wei, float* out, int si
     sum += in_float4.z * in_float4.z;
     sum += in_float4.w * in_float4.w;
   }
-
+  // 处理无法4个读的情况，按照原始的方法进行逐个处理
   for (int i = pack_off + tid; i < size; i += blockDim.x) {
     sum += in[i] * in[i];
   }
@@ -126,6 +126,7 @@ void rmsnorm_kernel_cu(const tensor::Tensor& input, const tensor::Tensor& weight
   float* in_ptr = const_cast<float*>(input.ptr<float>());
   float* wei_ptr = const_cast<float*>(weight.ptr<float>());
   float* out_ptr = const_cast<float*>(output.ptr<float>());
+
   constexpr int threads_num = 128;
   if (stream) {
     cudaStream_t stream_ = static_cast<cudaStream_t>(stream);
